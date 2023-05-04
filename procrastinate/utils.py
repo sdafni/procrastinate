@@ -192,8 +192,11 @@ def sync_await(awaitable: Awaitable[T]) -> T:
     """
     Given an awaitable, awaits it synchronously. Returns the result after it's done.
     """
-
-    loop = asyncio.get_event_loop()
+    try:
+        loop = asyncio.get_event_loop()
+    except Exception as e:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
     if loop.is_closed():
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
